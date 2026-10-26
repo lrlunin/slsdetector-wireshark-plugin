@@ -4,6 +4,7 @@ name: Build & Release
 # Push a tag "v*":     build all 9 plugins and publish a GitHub release
 #                      with the 9 libraries attached.
 on:
+  pull_request:
   push:
     branches: [main]
     tags: ['v*']

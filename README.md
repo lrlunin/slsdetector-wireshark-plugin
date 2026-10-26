@@ -15,7 +15,10 @@ size in bytes, and the number of pixels in the payload.
 The pixel count uses the detector's bit depth: 16 bit for Jungfrau, Moench and
 Gotthard2. Eiger and Mythen3 have a configurable dynamic range, so set it under
 *Edit → Preferences → Protocols → SLSDET* (default 16 bit for Eiger, 32 bit for
-Mythen3). Chip test board payloads are not plain pixel arrays, so they get no
+Mythen3). Matterhorn has 1–4 counters per pixel of 4, 8 or 16 bit each, set
+on the same page (default 1 counter, 16 bit); its pixel count is
+payload bits / (counters × bits per counter), and a payload other than the
+expected 8192 bytes is marked. Chip test board payloads are not plain pixel arrays, so they get no
 pixel count.
 
 It decodes packets sent from UDP **source** ports **32410–32420** by default. You
