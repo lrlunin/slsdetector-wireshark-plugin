@@ -91,11 +91,10 @@ jobs:
       # ---------------------------------------------------------- artifact
       - uses: actions/upload-artifact@v4
         with:
-          name: sls-wireshark-${{ matrix.ws }}-${{ matrix.platform }}
+          name: slsdet-wireshark-${{ matrix.ws }}-${{ matrix.platform }}
           path: |
             dist/*.so
             dist/*.dll
-            dist/*.zip
           if-no-files-found: error
 
   # One check run per platform ("Linux", "Windows", "macOS") for the README
@@ -155,9 +154,9 @@ jobs:
 
           | Wireshark | Linux (x86_64) | Windows (x64) | macOS (Intel + Apple Silicon) |
           |---|---|---|---|
-          | 2.6.x | `sls-wireshark-2.6-linux-x86_64.so` | `sls-wireshark-2.6-windows-x64.dll` | `sls-wireshark-2.6-macos-universal.so` |
-          | 3.6.x | `sls-wireshark-3.6-linux-x86_64.so` | `sls-wireshark-3.6-windows-x64.dll` | `sls-wireshark-3.6-macos-universal.so` |
-          | 4.6.x | `sls-wireshark-4.6-linux-x86_64.so` | `sls-wireshark-4.6-windows-x64.dll` | `sls-wireshark-4.6-macos-universal.so` |
+          | 2.6.x | `slsdet-wireshark-2.6-linux-x86_64.so` | `slsdet-wireshark-2.6-windows-x64.dll` | `slsdet-wireshark-2.6-macos-universal.so` |
+          | 3.6.x | `slsdet-wireshark-3.6-linux-x86_64.so` | `slsdet-wireshark-3.6-windows-x64.dll` | `slsdet-wireshark-3.6-macos-universal.so` |
+          | 4.6.x | `slsdet-wireshark-4.6-linux-x86_64.so` | `slsdet-wireshark-4.6-windows-x64.dll` | `slsdet-wireshark-4.6-macos-universal.so` |
 
           Pick the file matching your Wireshark major.minor version (Help > About)
           and copy it into your personal plugin folder:
