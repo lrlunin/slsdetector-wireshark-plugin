@@ -95,7 +95,6 @@ jobs:
           path: |
             dist/*.so
             dist/*.dll
-            dist/*.zip
           if-no-files-found: error
 
   # One check run per platform ("Linux", "Windows", "macOS") for the README
