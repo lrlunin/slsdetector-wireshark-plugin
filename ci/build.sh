@@ -21,7 +21,7 @@ PLATFORM="${2:?usage: build.sh <2.6|3.6|4.6> <linux|windows|macos> [out-dir]}"
 OUT_DIR="${3:-dist}"
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SRC="$ROOT/packet-sls.c"
+SRC="$ROOT/packet-slsdet.c"
 WORK="$ROOT/build/$WS_LINE-$PLATFORM"
 CC="${CC:-cc}"
 
@@ -78,16 +78,16 @@ CFLAGS=(-std=gnu11 -O2 -Wall -fvisibility=hidden -DSLS_PLUGIN_VERSION=\"$PLUGIN_
 case "$PLATFORM" in
   linux)
     ARCH="$(uname -m)"
-    PKG="sls-wireshark-$WS_LINE-linux-$ARCH"
-    PLUGIN="sls.so"
+    PKG="slsdet-wireshark-$WS_LINE-linux-$ARCH"
+    PLUGIN="slsdet.so"
     PLUGIN_SUBDIR="$WS_LINE/epan"
     "$CC" "${CFLAGS[@]}" -fPIC -shared -s -fno-stack-protector \
       "${INCLUDES[@]}" $GLIB_CFLAGS "$SRC" -o "$WORK/$PLUGIN"
     ;;
 
   macos)
-    PKG="sls-wireshark-$WS_LINE-macos-universal"
-    PLUGIN="sls.so"
+    PKG="slsdet-wireshark-$WS_LINE-macos-universal"
+    PLUGIN="slsdet.so"
     # Wireshark.app uses "X-Y" (no dot) for plugin folders since 3.x
     if [ "$MAJOR" -ge 3 ]; then PLUGIN_SUBDIR="$MAJOR-$MINOR/epan"; else PLUGIN_SUBDIR="$WS_LINE/epan"; fi
     "$CC" "${CFLAGS[@]}" -fPIC -bundle -undefined dynamic_lookup \
@@ -96,10 +96,10 @@ case "$PLATFORM" in
     ;;
 
   windows)
-    PKG="sls-wireshark-$WS_LINE-windows-x64"
-    PLUGIN="sls.dll"
+    PKG="slsdet-wireshark-$WS_LINE-windows-x64"
+    PLUGIN="slsdet.dll"
     PLUGIN_SUBDIR="$WS_LINE/epan"
-    OBJ="$WORK/packet-sls.o"
+    OBJ="$WORK/packet-slsdet.o"
     "$CC" "${CFLAGS[@]}" -c "${INCLUDES[@]}" $GLIB_CFLAGS "$SRC" -o "$OBJ"
 
     # Every dllimport'ed symbol must come from libwireshark.dll; refuse
@@ -137,7 +137,7 @@ Copy plugins/$PLUGIN_SUBDIR/$PLUGIN into your personal plugin folder:
 
 (The exact base folder is listed under Help > About Wireshark > Folders.)
 macOS: if the file was downloaded with a browser, run
-  xattr -d com.apple.quarantine sls.so
+  xattr -d com.apple.quarantine slsdet.so
 Restart Wireshark; the plugin appears under Help > About Wireshark > Plugins.
 EOF
 
@@ -146,6 +146,6 @@ EOF
   rm -f "$OUT_DIR/$PKG.zip"
   zip -qr "$OUT_DIR/$PKG.zip" "$PKG"
 )
-# bare library for the GitHub release, e.g. sls-wireshark-4.6-linux-x86_64.so
+# bare library for the GitHub release, e.g. slsdet-wireshark-4.6-linux-x86_64.so
 cp "$WORK/$PLUGIN" "$OUT_DIR/$PKG.${PLUGIN##*.}"
 echo ">> built $OUT_DIR/$PKG.zip and $OUT_DIR/$PKG.${PLUGIN##*.}"

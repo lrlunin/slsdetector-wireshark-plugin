@@ -23,23 +23,23 @@ pixel count.
 
 It decodes packets sent from UDP **source** ports **32410–32420** by default. You
 can change the range under *Edit → Preferences → Protocols → SLSDET → UDP source
-port(s)*. For other ports, enable the heuristic *sls_udp* under
+port(s)*. For other ports, enable the heuristic *slsdet_udp* under
 *Analyze → Enabled Protocols*.
 
 Every field can be used as a display filter, for example:
 
 ```
-sls.frame == 2596
-sls.packet == 16 && sls.row == 0
-sls.dettype == 5
-sls.pixels == 4096
+slsdet.frame == 2596
+slsdet.packet == 16 && slsdet.row == 0
+slsdet.dettype == 5
+slsdet.pixels == 4096
 ```
 
 ## Install
 
 Download the zip for your Wireshark **major.minor** version (shown under
 *Help → About*) and platform from the
-[Releases](../../releases) page. Copy `sls.so` / `sls.dll` from its
+[Releases](../../releases) page. Copy `slsdet.so` / `slsdet.dll` from its
 `plugins/...` folder into your personal plugin folder:
 
 | Platform | Folder |

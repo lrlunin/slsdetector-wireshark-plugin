@@ -1,5 +1,5 @@
 /*
- * packet-sls.c - Wireshark binary plugin for SLS detector UDP packets
+ * packet-slsdet.c - Wireshark binary plugin for SLS detector UDP packets
  * (slsDetectorPackage "sls_detector_header", 48 bytes, little-endian)
  *
  * Builds against Wireshark 2.6, 3.6 and 4.6 (Linux, Windows, macOS).
@@ -280,7 +280,7 @@ dissect_sls_udp(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, void *data)
     return dissect_sls(tvb, pinfo, tree, data);
 }
 
-/* Optional heuristic: enable via Analyze > Enabled Protocols > "sls_udp" */
+/* Optional heuristic: enable via Analyze > Enabled Protocols > "slsdet_udp" */
 static sls_bool
 dissect_sls_heur(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, void *data)
 {
@@ -311,24 +311,24 @@ proto_register_sls(void)
     module_t *sls_module;
 
     static hf_register_info hf[] = {
-        { &hf_sls_frame,     { "Frame Number",   "sls.frame",       FT_UINT64, BASE_DEC, NULL, 0, NULL, HFILL } },
-        { &hf_sls_explength, { "Exp Length",     "sls.explength",   FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
-        { &hf_sls_packet,    { "Packet Number",  "sls.packet",      FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
-        { &hf_sls_detspec1,  { "DetSpec1",       "sls.detspec1",    FT_UINT64, BASE_HEX, NULL, 0, NULL, HFILL } },
-        { &hf_sls_timestamp, { "Timestamp",      "sls.timestamp",   FT_UINT64, BASE_DEC, NULL, 0, NULL, HFILL } },
-        { &hf_sls_modid,     { "Module ID",      "sls.modid",       FT_UINT16, BASE_DEC, NULL, 0, NULL, HFILL } },
-        { &hf_sls_row,       { "Row",            "sls.row",         FT_UINT16, BASE_DEC, NULL, 0, NULL, HFILL } },
-        { &hf_sls_column,    { "Column",         "sls.column",      FT_UINT16, BASE_DEC, NULL, 0, NULL, HFILL } },
-        { &hf_sls_detspec2,  { "DetSpec2",       "sls.detspec2",    FT_UINT16, BASE_HEX, NULL, 0, NULL, HFILL } },
-        { &hf_sls_detspec3,  { "DetSpec3",       "sls.detspec3",    FT_UINT32, BASE_HEX, NULL, 0, NULL, HFILL } },
-        { &hf_sls_detspec4,  { "DetSpec4",       "sls.detspec4",    FT_UINT16, BASE_HEX, NULL, 0, NULL, HFILL } },
-        { &hf_sls_dettype,   { "Detector Type",  "sls.dettype",     FT_UINT8,  BASE_DEC, VALS(sls_det_types), 0, NULL, HFILL } },
-        { &hf_sls_version,   { "Header Version", "sls.version",     FT_UINT8,  BASE_DEC, NULL, 0, NULL, HFILL } },
-        { &hf_sls_payload,   { "Payload",        "sls.payload",     FT_BYTES,  BASE_NONE, NULL, 0, NULL, HFILL } },
-        { &hf_sls_plen,      { "Payload Size",   "sls.payload_len", FT_UINT32, BASE_DEC, NULL, 0, "Payload size in bytes", HFILL } },
-        { &hf_sls_bitdepth,  { "Bits per Pixel", "sls.bitdepth",    FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
-        { &hf_sls_npix,      { "Pixel Count",    "sls.pixels",      FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
-        { &hf_sls_ncounters, { "Counters per Pixel", "sls.counters", FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
+        { &hf_sls_frame,     { "Frame Number",   "slsdet.frame",       FT_UINT64, BASE_DEC, NULL, 0, NULL, HFILL } },
+        { &hf_sls_explength, { "Exp Length",     "slsdet.explength",   FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
+        { &hf_sls_packet,    { "Packet Number",  "slsdet.packet",      FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
+        { &hf_sls_detspec1,  { "DetSpec1",       "slsdet.detspec1",    FT_UINT64, BASE_HEX, NULL, 0, NULL, HFILL } },
+        { &hf_sls_timestamp, { "Timestamp",      "slsdet.timestamp",   FT_UINT64, BASE_DEC, NULL, 0, NULL, HFILL } },
+        { &hf_sls_modid,     { "Module ID",      "slsdet.modid",       FT_UINT16, BASE_DEC, NULL, 0, NULL, HFILL } },
+        { &hf_sls_row,       { "Row",            "slsdet.row",         FT_UINT16, BASE_DEC, NULL, 0, NULL, HFILL } },
+        { &hf_sls_column,    { "Column",         "slsdet.column",      FT_UINT16, BASE_DEC, NULL, 0, NULL, HFILL } },
+        { &hf_sls_detspec2,  { "DetSpec2",       "slsdet.detspec2",    FT_UINT16, BASE_HEX, NULL, 0, NULL, HFILL } },
+        { &hf_sls_detspec3,  { "DetSpec3",       "slsdet.detspec3",    FT_UINT32, BASE_HEX, NULL, 0, NULL, HFILL } },
+        { &hf_sls_detspec4,  { "DetSpec4",       "slsdet.detspec4",    FT_UINT16, BASE_HEX, NULL, 0, NULL, HFILL } },
+        { &hf_sls_dettype,   { "Detector Type",  "slsdet.dettype",     FT_UINT8,  BASE_DEC, VALS(sls_det_types), 0, NULL, HFILL } },
+        { &hf_sls_version,   { "Header Version", "slsdet.version",     FT_UINT8,  BASE_DEC, NULL, 0, NULL, HFILL } },
+        { &hf_sls_payload,   { "Payload",        "slsdet.payload",     FT_BYTES,  BASE_NONE, NULL, 0, NULL, HFILL } },
+        { &hf_sls_plen,      { "Payload Size",   "slsdet.payload_len", FT_UINT32, BASE_DEC, NULL, 0, "Payload size in bytes", HFILL } },
+        { &hf_sls_bitdepth,  { "Bits per Pixel", "slsdet.bitdepth",    FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
+        { &hf_sls_npix,      { "Pixel Count",    "slsdet.pixels",      FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
+        { &hf_sls_ncounters, { "Counters per Pixel", "slsdet.counters", FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
     };
 
     static gint *ett[] = {
@@ -337,7 +337,7 @@ proto_register_sls(void)
         &ett_sls_payload,
     };
 
-    proto_sls = proto_register_protocol("SLS Detector", "SLSDET", "sls");
+    proto_sls = proto_register_protocol("SLS Detector", "SLSDET", "slsdet");
     proto_register_field_array(proto_sls, hf, array_length(hf));
     proto_register_subtree_array(ett, array_length(ett));
 
@@ -370,7 +370,7 @@ proto_reg_handoff_sls(void)
 {
     sls_apply_prefs();
     heur_dissector_add("udp", dissect_sls_heur, "SLS Detector over UDP (any port)",
-                       "sls_udp", proto_sls, HEURISTIC_DISABLE);
+                       "slsdet_udp", proto_sls, HEURISTIC_DISABLE);
 }
 
 /* ---------------------------------------------------------------------
