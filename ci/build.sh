@@ -146,4 +146,6 @@ EOF
   rm -f "$OUT_DIR/$PKG.zip"
   zip -qr "$OUT_DIR/$PKG.zip" "$PKG"
 )
-echo ">> built $OUT_DIR/$PKG.zip"
+# bare library for the GitHub release, e.g. sls-wireshark-4.6-linux-x86_64.so
+cp "$WORK/$PLUGIN" "$OUT_DIR/$PKG.${PLUGIN##*.}"
+echo ">> built $OUT_DIR/$PKG.zip and $OUT_DIR/$PKG.${PLUGIN##*.}"
