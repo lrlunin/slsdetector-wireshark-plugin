@@ -7,6 +7,9 @@
 Wireshark plugin that decodes the 48-byte `sls_detector_header` of
 slsDetectorPackage UDP packets (Jungfrau, Moench, Eiger, Mythen3, ...).
 
+<img width="1477" height="737" alt="slsdet_gui" src="https://github.com/user-attachments/assets/5f1ea381-d258-4ad7-a9b7-c9fab83feafb" />
+
+
 The plugin shows all header fields, the detector type by name, the payload
 size in bytes, and the number of pixels in the payload.
 The pixel count uses the detector's bit depth: 16 bit for Jungfrau, Moench and
