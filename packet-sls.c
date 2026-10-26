@@ -76,6 +76,7 @@ typedef gboolean sls_bool;
 #endif
 #define SLS_HDR_LEN        48
 #define SLS_DEFAULT_PORTS  "32410-32420"   /* UDP source ports, inclusive */
+#define SLS_MATTERHORN_PLEN 8192           /* MATTERHORN payload bytes per packet */
 
 static int proto_sls = -1;
 
@@ -96,6 +97,7 @@ static int hf_sls_payload    = -1;
 static int hf_sls_plen       = -1;
 static int hf_sls_bitdepth   = -1;
 static int hf_sls_npix       = -1;
+static int hf_sls_ncounters  = -1;
 
 static gint ett_sls         = -1;
 static gint ett_sls_header  = -1;
@@ -104,6 +106,8 @@ static gint ett_sls_payload = -1;
 /* Preferences */
 static gint     pref_eiger_bits  = 16;
 static gint     pref_mythen_bits = 32;
+static gint     pref_mh_bits     = 16;
+static gint     pref_mh_counters = 1;
 static range_t *pref_src_ports   = NULL;
 
 static dissector_handle_t sls_handle;
@@ -118,9 +122,10 @@ static const value_string sls_det_types[] = {
     { 6, "MYTHEN3" },
     { 7, "GOTTHARD2" },
     { 8, "XILINX_CHIPTESTBOARD" },
+    { 9, "MATTERHORN" },
     { 0, NULL }
 };
-#define SLS_DET_TYPE_MAX 8
+#define SLS_DET_TYPE_MAX 9
 
 /* Dynamic ranges allowed by slsDetectorPackage (Detector::getDynamicRangeList) */
 static const enum_val_t sls_eiger_bits[] = {
@@ -136,6 +141,21 @@ static const enum_val_t sls_mythen_bits[] = {
     { "8",  "8 bit",  8 },
     { "16", "16 bit", 16 },
     { "32", "32 bit", 32 },
+    { NULL, NULL, 0 }
+};
+
+static const enum_val_t sls_mh_bits[] = {
+    { "4",  "4 bit",  4 },
+    { "8",  "8 bit",  8 },
+    { "16", "16 bit", 16 },
+    { NULL, NULL, 0 }
+};
+
+static const enum_val_t sls_mh_counters[] = {
+    { "1", "1 counter",  1 },
+    { "2", "2 counters", 2 },
+    { "3", "3 counters", 3 },
+    { "4", "4 counters", 4 },
     { NULL, NULL, 0 }
 };
 
@@ -162,8 +182,16 @@ sls_bits_per_pixel(guint8 t)
     case 5:                                   /* MOENCH */
     case 7:  return 16;                       /* GOTTHARD2 */
     case 6:  return (guint)pref_mythen_bits;  /* MYTHEN3: configurable */
+    case 9:  return (guint)pref_mh_bits;      /* MATTERHORN: configurable */
     default: return 0;
     }
+}
+
+/* Counters per pixel: MATTERHORN has 1-4 configurable, all others 1 */
+static guint
+sls_counters_per_pixel(guint8 t)
+{
+    return t == 9 ? (guint)pref_mh_counters : 1;
 }
 
 static int
@@ -217,18 +245,25 @@ dissect_sls(tvbuff_t *tvb, packet_info *pinfo, proto_tree *tree, void *data _U_)
     if (len > SLS_HDR_LEN) {
         guint plen = len - SLS_HDR_LEN;
         guint bits = sls_bits_per_pixel(dettype);
+        guint ncnt = sls_counters_per_pixel(dettype);
 
         pi = proto_tree_add_item(sls_tree, hf_sls_payload, tvb, SLS_HDR_LEN, plen, ENC_NA);
         pl_tree = proto_item_add_subtree(pi, ett_sls_payload);
 
         pi = proto_tree_add_uint(pl_tree, hf_sls_plen, tvb, SLS_HDR_LEN, plen, plen);
         PROTO_ITEM_SET_GENERATED(pi);
+        if (dettype == 9 && plen != SLS_MATTERHORN_PLEN)
+            proto_item_append_text(pi, " (expected %u)", SLS_MATTERHORN_PLEN);
 
         if (bits > 0) {
             pi = proto_tree_add_uint(pl_tree, hf_sls_bitdepth, tvb, SLS_HDR_LEN, plen, bits);
             PROTO_ITEM_SET_GENERATED(pi);
+            if (dettype == 9) {
+                pi = proto_tree_add_uint(pl_tree, hf_sls_ncounters, tvb, SLS_HDR_LEN, plen, ncnt);
+                PROTO_ITEM_SET_GENERATED(pi);
+            }
             pi = proto_tree_add_uint(pl_tree, hf_sls_npix, tvb, SLS_HDR_LEN, plen,
-                                     (guint)(((guint64)plen * 8) / bits));
+                                     (guint)(((guint64)plen * 8) / (bits * ncnt)));
             PROTO_ITEM_SET_GENERATED(pi);
         }
     }
@@ -293,6 +328,7 @@ proto_register_sls(void)
         { &hf_sls_plen,      { "Payload Size",   "sls.payload_len", FT_UINT32, BASE_DEC, NULL, 0, "Payload size in bytes", HFILL } },
         { &hf_sls_bitdepth,  { "Bits per Pixel", "sls.bitdepth",    FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
         { &hf_sls_npix,      { "Pixel Count",    "sls.pixels",      FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
+        { &hf_sls_ncounters, { "Counters per Pixel", "sls.counters", FT_UINT32, BASE_DEC, NULL, 0, NULL, HFILL } },
     };
 
     static gint *ett[] = {
@@ -317,6 +353,12 @@ proto_register_sls(void)
     prefs_register_enum_preference(sls_module, "mythen3_bits", "MYTHEN3 dynamic range",
         "Bits per pixel of MYTHEN3 payloads (set by the detector's dynamic range)",
         &pref_mythen_bits, sls_mythen_bits, SLS_FALSE);
+    prefs_register_enum_preference(sls_module, "matterhorn_bits", "MATTERHORN counter depth",
+        "Bits per counter of MATTERHORN payloads",
+        &pref_mh_bits, sls_mh_bits, SLS_FALSE);
+    prefs_register_enum_preference(sls_module, "matterhorn_counters", "MATTERHORN counters",
+        "Number of enabled counters per MATTERHORN pixel",
+        &pref_mh_counters, sls_mh_counters, SLS_FALSE);
     prefs_register_obsolete_preference(sls_module, "clock_mhz");
     prefs_register_obsolete_preference(sls_module, "stats");
     prefs_register_obsolete_preference(sls_module, "show_pixels");
