@@ -26,7 +26,7 @@ Version:        %{plugin_version}
 Release:        %{plugin_release}%{?dist}
 Summary:        Wireshark dissector for SLS detector UDP packets
 License:        Unspecified
-URL:            https://github.com/lrlunin/slsdetector-wireshark-plugin
+URL:            https://github.com/slsdetectorgroup/slsdetector-wireshark-plugin
 Source0:        slsdet.so
 Source1:        README.md
 ExclusiveArch:  x86_64

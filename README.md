@@ -1,8 +1,8 @@
 # SLS detector dissector for Wireshark
 
-[![Linux](https://img.shields.io/github/check-runs/lrlunin/slsdetector-wireshark-plugin/main?nameFilter=Linux&label=Linux)](https://github.com/lrlunin/slsdetector-wireshark-plugin/actions/workflows/release.yml)
-[![Windows](https://img.shields.io/github/check-runs/lrlunin/slsdetector-wireshark-plugin/main?nameFilter=Windows&label=Windows)](https://github.com/lrlunin/slsdetector-wireshark-plugin/actions/workflows/release.yml)
-[![macOS](https://img.shields.io/github/check-runs/lrlunin/slsdetector-wireshark-plugin/main?nameFilter=macOS&label=macOS)](https://github.com/lrlunin/slsdetector-wireshark-plugin/actions/workflows/release.yml)
+[![Linux](https://img.shields.io/github/check-runs/slsdetectorgroup/slsdetector-wireshark-plugin/main?nameFilter=Linux&label=Linux)](https://github.com/slsdetectorgroup/slsdetector-wireshark-plugin/actions/workflows/release.yml)
+[![Windows](https://img.shields.io/github/check-runs/slsdetectorgroup/slsdetector-wireshark-plugin/main?nameFilter=Windows&label=Windows)](https://github.com/slsdetectorgroup/slsdetector-wireshark-plugin/actions/workflows/release.yml)
+[![macOS](https://img.shields.io/github/check-runs/slsdetectorgroup/slsdetector-wireshark-plugin/main?nameFilter=macOS&label=macOS)](https://github.com/slsdetectorgroup/slsdetector-wireshark-plugin/actions/workflows/release.yml)
 
 Wireshark plugin that decodes the 48-byte `sls_detector_header` of
 slsDetectorPackage UDP packets (Jungfrau, Moench, Eiger, Mythen3, ...).
@@ -56,7 +56,7 @@ A signed dnf repository on GitHub Pages provides the plugin for the Wireshark
 each release ships (RHEL 8: 2.6, RHEL 9: 3.4), installed for all users:
 
 ```
-sudo dnf config-manager --add-repo https://lrlunin.github.io/slsdetector-wireshark-plugin/el$(rpm -E %rhel)/slsdet.repo
+sudo dnf config-manager --add-repo https://slsdetectorgroup.github.io/slsdetector-wireshark-plugin/el$(rpm -E %rhel)/slsdet.repo
 sudo dnf install slsdet-wireshark
 ```
 

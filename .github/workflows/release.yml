@@ -178,7 +178,7 @@ jobs:
           **RHEL / AlmaLinux / Rocky 8 and 9:** install from the dnf repository instead:
 
           ```
-          sudo dnf config-manager --add-repo https://lrlunin.github.io/slsdetector-wireshark-plugin/el$(rpm -E %rhel)/slsdet.repo
+          sudo dnf config-manager --add-repo https://slsdetectorgroup.github.io/slsdetector-wireshark-plugin/el$(rpm -E %rhel)/slsdet.repo
           sudo dnf install slsdet-wireshark
           ```
           EOF
