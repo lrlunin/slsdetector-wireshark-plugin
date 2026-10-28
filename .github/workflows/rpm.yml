@@ -57,6 +57,8 @@ jobs:
       #                        newer than 1.2.0-1 and older than the next release
       - name: Plugin version from tag
         run: |
+          # the container runs as root, the checkout belongs to the runner user
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
             echo "PLUGIN_VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
             echo "RPM_VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
