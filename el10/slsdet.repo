@@ -1,0 +1,7 @@
+[slsdet-wireshark]
+name=SLS detector Wireshark plugin (el10)
+baseurl=https://slsdetectorgroup.github.io/slsdetector-wireshark-plugin/el10/
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://slsdetectorgroup.github.io/slsdetector-wireshark-plugin/RPM-GPG-KEY-slsdet
