@@ -50,10 +50,24 @@ Download the zip for your Wireshark **major.minor** version (shown under
 
 Restart Wireshark. The plugin is then listed under *Help → About Wireshark → Plugins*.
 
+### RHEL / AlmaLinux / Rocky Linux
+
+A signed dnf repository on GitHub Pages provides the plugin for the Wireshark
+each release ships (RHEL 8: 2.6, RHEL 9: 3.4), installed for all users:
+
+```
+sudo dnf config-manager --add-repo https://lrlunin.github.io/slsdetector-wireshark-plugin/el$(rpm -E %rhel)/slsdet.repo
+sudo dnf install slsdet-wireshark
+```
+
+New releases then arrive with `sudo dnf upgrade`.
+
+RHEL 7 ships Wireshark 1.10, which is too old for this plugin.
+
 ## Build
 
 ```
-ci/build.sh <2.6|3.6|4.6> <linux|windows|macos> [out-dir]
+ci/build.sh <2.6|3.4|3.6|4.6> <linux|windows|macos> [out-dir]
 ```
 
 The script only needs the GLib headers, `curl`, `tar` and `zip`, and downloads
@@ -61,7 +75,9 @@ the matching Wireshark headers itself. On Windows it runs in an MSYS2 MINGW64 sh
 
 ## Release
 
-Push a tag, and GitHub Actions builds all nine variants and publishes a release:
+Push a tag, and GitHub Actions builds all nine variants, publishes a release,
+and adds RHEL 8/9 RPMs ([rpm.yml](.github/workflows/rpm.yml)) to the dnf
+repository on the `gh-pages` branch ([rpm-repo.yml](.github/workflows/rpm-repo.yml)):
 
 ```
 git tag v1.0.0
