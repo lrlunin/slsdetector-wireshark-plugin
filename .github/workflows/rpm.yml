@@ -28,6 +28,7 @@ jobs:
         include:
           - { dist: el8, image: 'almalinux:8', ws: '2.6' }
           - { dist: el9, image: 'almalinux:9', ws: '3.4' }
+          - { dist: el10, image: 'almalinux:10', ws: '4.4' }
 
     steps:
       # git before checkout, so it clones with history and tags for git describe

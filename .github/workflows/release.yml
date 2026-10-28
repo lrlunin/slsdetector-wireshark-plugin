@@ -175,7 +175,7 @@ jobs:
           Restart Wireshark; the plugin is listed under Help > About Wireshark > Plugins.
           On macOS, run `xattr -d com.apple.quarantine <file>` after downloading with a browser.
 
-          **RHEL / AlmaLinux / Rocky 8 and 9:** install from the dnf repository instead:
+          **RHEL / AlmaLinux / Rocky 8, 9 and 10:** install from the dnf repository instead:
 
           ```
           sudo dnf config-manager --add-repo https://slsdetectorgroup.github.io/slsdetector-wireshark-plugin/el$(rpm -E %rhel)/slsdet.repo

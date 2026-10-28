@@ -4,7 +4,7 @@
 #
 #   ci/build.sh <ws-line> <platform> [out-dir]
 #
-#   ws-line   2.6 | 3.4 | 3.6 | 4.6   (3.4: RHEL 9's Wireshark)
+#   ws-line   2.6 | 3.4 | 3.6 | 4.4 | 4.6   (3.4, 4.4: RHEL 9, 10's Wireshark)
 #   platform  linux | windows | macos
 #
 # Only Wireshark's *headers* are needed (fetched from the GitHub mirror),
@@ -16,8 +16,8 @@
 #
 set -euo pipefail
 
-WS_LINE="${1:?usage: build.sh <2.6|3.4|3.6|4.6> <linux|windows|macos> [out-dir]}"
-PLATFORM="${2:?usage: build.sh <2.6|3.4|3.6|4.6> <linux|windows|macos> [out-dir]}"
+WS_LINE="${1:?usage: build.sh <2.6|3.4|3.6|4.4|4.6> <linux|windows|macos> [out-dir]}"
+PLATFORM="${2:?usage: build.sh <2.6|3.4|3.6|4.4|4.6> <linux|windows|macos> [out-dir]}"
 OUT_DIR="${3:-dist}"
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -30,6 +30,7 @@ case "$WS_LINE" in
   2.6) WS_TAG="wireshark-2.6.20" ;;
   3.4) WS_TAG="wireshark-3.4.16" ;;
   3.6) WS_TAG="wireshark-3.6.24" ;;
+  4.4) WS_TAG="v4.4.19" ;;
   4.6) WS_TAG="v4.6.9" ;;
   *) echo "unsupported Wireshark line: $WS_LINE" >&2; exit 1 ;;
 esac

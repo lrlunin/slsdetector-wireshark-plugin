@@ -7,6 +7,7 @@ name: RPM repository
 #     RPM-GPG-KEY-slsdet
 #     el8/  slsdet.repo  repodata/  *.el8.x86_64.rpm
 #     el9/  slsdet.repo  repodata/  *.el9.x86_64.rpm
+#     el10/ slsdet.repo  repodata/  *.el10.x86_64.rpm
 #
 # Earlier releases stay in the repository (dnf downgrade works).
 #
@@ -84,7 +85,7 @@ jobs:
           gpg --armor --export "$GPG_FPR" > site/RPM-GPG-KEY-slsdet
           touch site/.nojekyll
 
-          for el in el8 el9; do
+          for el in el8 el9 el10; do
             ls rpms/*."$el".x86_64.rpm >/dev/null
             mkdir -p "site/$el"
             cp rpms/*."$el".x86_64.rpm "site/$el/"
@@ -106,10 +107,10 @@ jobs:
           <meta charset="utf-8">
           <title>slsdet-wireshark RPM repository</title>
           <h1>slsdet-wireshark RPM repository</h1>
-          <p>RHEL / AlmaLinux / Rocky Linux 8 and 9:</p>
+          <p>RHEL / AlmaLinux / Rocky Linux 8, 9 and 10:</p>
           <pre>sudo dnf config-manager --add-repo $base/el\$(rpm -E %rhel)/slsdet.repo
           sudo dnf install slsdet-wireshark</pre>
-          <p><a href="el8/">el8</a> &middot; <a href="el9/">el9</a> &middot;
+          <p><a href="el8/">el8</a> &middot; <a href="el9/">el9</a> &middot; <a href="el10/">el10</a> &middot;
           <a href="RPM-GPG-KEY-slsdet">RPM-GPG-KEY-slsdet</a></p>
           EOF
           find site -path site/.git -prune -o -type f -print | sort
