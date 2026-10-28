@@ -1,8 +1,10 @@
 name: Build & Release
 
-# Every push to main: build all 9 plugins (kept as workflow artifacts).
-# Push a tag "v*":     build all 9 plugins and publish a GitHub release
-#                      with the 9 libraries attached.
+# Every push to main: build all 9 plugins and the RHEL RPMs (kept as
+#                      workflow artifacts).
+# Push a tag "v*":     build them, publish a GitHub release with the
+#                      9 libraries attached, and add the RPMs to the dnf
+#                      repository on GitHub Pages (rpm-repo.yml).
 on:
   pull_request:
   push:
@@ -97,6 +99,9 @@ jobs:
             dist/*.dll
           if-no-files-found: error
 
+  rpm:
+    uses: ./.github/workflows/rpm.yml
+
   # One check run per platform ("Linux", "Windows", "macOS") for the README
   # badges: green only if all three Wireshark builds of that platform passed.
   status:
@@ -126,7 +131,7 @@ jobs:
 
   release:
     name: Publish release
-    needs: build
+    needs: [build, rpm]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
@@ -169,8 +174,21 @@ jobs:
 
           Restart Wireshark; the plugin is listed under Help > About Wireshark > Plugins.
           On macOS, run `xattr -d com.apple.quarantine <file>` after downloading with a browser.
+
+          **RHEL / AlmaLinux / Rocky 8 and 9:** install from the dnf repository instead:
+
+          ```
+          sudo dnf config-manager --add-repo https://slsdetectorgroup.github.io/slsdetector-wireshark-plugin/el$(rpm -E %rhel)/slsdet.repo
+          sudo dnf install slsdet-wireshark
+          ```
           EOF
           gh release create "$GITHUB_REF_NAME" release/* \
             --repo "$GITHUB_REPOSITORY" \
             --title "$GITHUB_REF_NAME" \
             --notes-file notes.md
+
+  rpm-repo:
+    needs: [rpm, release]
+    if: startsWith(github.ref, 'refs/tags/v')
+    uses: ./.github/workflows/rpm-repo.yml
+    secrets: inherit
