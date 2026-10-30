@@ -5,6 +5,8 @@ name: RPM repository
 #
 #   https://<owner>.github.io/<repo>/
 #     RPM-GPG-KEY-slsdet
+#     el7/  slsdet.repo  repodata/  (empty: no EL7 package, but yum on hosts
+#                                    that added the repo must not get a 404)
 #     el8/  slsdet.repo  repodata/  *.el8.x86_64.rpm
 #     el9/  slsdet.repo  repodata/  *.el9.x86_64.rpm
 #     el10/ slsdet.repo  repodata/  *.el10.x86_64.rpm
@@ -85,10 +87,12 @@ jobs:
           gpg --armor --export "$GPG_FPR" > site/RPM-GPG-KEY-slsdet
           touch site/.nojekyll
 
-          for el in el8 el9 el10; do
-            ls rpms/*."$el".x86_64.rpm >/dev/null
+          for el in el7 el8 el9 el10; do
             mkdir -p "site/$el"
-            cp rpms/*."$el".x86_64.rpm "site/$el/"
+            if [ "$el" != el7 ]; then
+              ls rpms/*."$el".x86_64.rpm >/dev/null
+              cp rpms/*."$el".x86_64.rpm "site/$el/"
+            fi
             createrepo_c --update "site/$el"
             gpg --batch --yes --detach-sign --armor "site/$el/repodata/repomd.xml"
             cat > "site/$el/slsdet.repo" <<EOF
